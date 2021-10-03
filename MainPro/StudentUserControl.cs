@@ -15,7 +15,7 @@ namespace MainPro
     public partial class StudentUserControl : UserControl
     {
         private string? rowId;
-        private List<Student> students = MyDB.students;
+        private List<Student> students = StudentsTable.students;
         public StudentUserControl()
         {
             InitializeComponent();
@@ -125,7 +125,7 @@ namespace MainPro
         {
             if(SearchByComboBox.Text != "None")
             {
-                students = MyDB.Search(SearchByComboBox.Text, SearchTextBox.Text);
+                students = StudentsTable.Filter(SearchByChoice);
                 StudentDataGridView.DataSource = null;
                 StudentDataGridView.DataSource = students;
             }
@@ -168,6 +168,29 @@ namespace MainPro
                 else
                     rowId = row.Cells[0].Value.ToString();
             }
+        }
+        public bool SearchByChoice(Student student)
+        {
+            bool result = false;
+            switch (SearchByComboBox.Text)
+            {
+                case "First Name":
+                    result = student.FirstName.Contains(SearchTextBox.Text);
+                    break;
+                case "Last Name":
+                    result = student.LastName.Contains(SearchTextBox.Text);
+                    break;
+                case "Full Name":
+                    result = (student.FirstName + " " + student.LastName).Contains(SearchTextBox.Text);
+                    break;
+                case "City":
+                    result = student.City.Contains(SearchTextBox.Text);
+                    break;
+                case "Id":
+                    result = student.Id.Contains(SearchTextBox.Text);
+                    break;
+            }
+            return result;
         }
     }
 }
